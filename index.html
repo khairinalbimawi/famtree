@@ -1,34 +1,32 @@
 <!DOCTYPE html>
-<html lang="id">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Silsilah Keluarga APP</title>
+    <title>Silsilah Keluarga</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <style>
-        body { margin: 0; padding: 0; overflow: hidden; background-color: #f3f4f6; }
-        iframe { width: 100%; height: 100vh; border: none; display: block; }
+        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; }
+        iframe { width: 100%; height: 100%; border: none; }
     </style>
 </head>
 <body>
-    
-    <iframe id="appFrame" src=""></iframe>
+
+    <iframe id="gasFrame" src=""></iframe>
 
     <script>
-        // 🔥 1. GANTI INI DENGAN URL GOOGLE APPS SCRIPT (WEB APP) ANDA 🔥
-        // Contoh: "https://script.google.com/macros/s/AKfycby.../exec"
-        var gasUrl = "https://script.google.com/macros/s/AKfycbzfz6u-fzJaCGmcbUi1xksFMKCmXWkVXqAwBenu7tQ8TOe8SHsY2ITmbXSw9OtIrYUOTA/exec";
+        // 1. Link asli Google Apps Script Anda (Ganti dengan link Deploy Anda yang berakhiran /exec)
+        var gasLink = "https://script.google.com/macros/s/AKfycbzfz6u-fzJaCGmcbUi1xksFMKCmXWkVXqAwBenu7tQ8TOe8SHsY2ITmbXSw9OtIrYUOTA/exec";
 
-        // 🔥 2. Menangkap parameter ?uid= dari URL GitHub Pages
+        // 2. Tangkap parameter dari URL GitHub (misal: ?uid=123)
         var urlParams = new URLSearchParams(window.location.search);
         var uid = urlParams.get('uid');
 
-        // 🔥 3. Mengoper parameter ke dalam iframe Google Apps Script
+        // 3. Gabungkan link Google dengan UID jika ada, lalu masukkan ke iframe
         if (uid) {
-            gasUrl += "?uid=" + uid;
+            document.getElementById('gasFrame').src = gasLink + "?uid=" + uid;
+        } else {
+            document.getElementById('gasFrame').src = gasLink;
         }
-
-        // 🔥 4. Jalankan aplikasi dengan URL yang sudah disuntik ID
-        document.getElementById('appFrame').src = gasUrl;
     </script>
+
 </body>
 </html>
