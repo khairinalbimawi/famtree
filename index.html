@@ -1,32 +1,66 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Silsilah Keluarga</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <style>
-        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; }
-        iframe { width: 100%; height: 100%; border: none; }
+        body, html {
+            margin: 0; padding: 0; height: 100%; overflow: hidden;
+            background-color: #f8fafc;
+        }
+        iframe {
+            width: 100%; height: 100%; border: none;
+        }
+        .loading {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            font-family: system-ui, -apple-system, sans-serif;
+            color: #64748b; text-align: center; z-index: 100;
+        }
     </style>
 </head>
 <body>
 
+    <div class="loading" id="loadingText">
+        <p>Memuat silsilah keluarga...</p>
+    </div>
+
     <iframe id="gasFrame" src=""></iframe>
 
     <script>
-        // 1. Link asli Google Apps Script Anda (Ganti dengan link Deploy Anda yang berakhiran /exec)
-        var gasLink = "https://script.google.com/macros/s/AKfycbzfz6u-fzJaCGmcbUi1xksFMKCmXWkVXqAwBenu7tQ8TOe8SHsY2ITmbXSw9OtIrYUOTA/exec";
+        const gasLink = "https://script.google.com/macros/s/AKfycbzfz6u-fzJaCGmcbUi1xksFMKCmXWkVXqAwBenu7tQ8TOe8SHsY2ITmbXSw9OtIrYUOTA/exec";
 
-        // 2. Tangkap parameter dari URL GitHub (misal: ?uid=123)
-        var urlParams = new URLSearchParams(window.location.search);
-        var uid = urlParams.get('uid');
+        const urlParams = new URLSearchParams(window.location.search);
+        const uid = urlParams.get('uid');
+        const mode = urlParams.get('mode');
 
-        // 3. Gabungkan link Google dengan UID jika ada, lalu masukkan ke iframe
-        if (uid) {
-            document.getElementById('gasFrame').src = gasLink + "?uid=" + uid;
-        } else {
-            document.getElementById('gasFrame').src = gasLink;
+        const iframe = document.getElementById('gasFrame');
+        const loadingText = document.getElementById('loadingText');
+
+        function loadApp() {
+            let finalUrl = gasLink;
+
+            if (uid) {
+                const separator = gasLink.includes('?') ? '&' : '?';
+                finalUrl += `${separator}uid=${encodeURIComponent(uid)}&mode=add`;
+                
+                loadingText.innerHTML = `
+                    <p>Scan QR berhasil ✓</p>
+                    <p class="text-sm mt-3">Menyiapkan form tambah anggota keluarga...</p>
+                `;
+            }
+
+            iframe.src = finalUrl;
+
+            iframe.onload = () => {
+                setTimeout(() => {
+                    loadingText.style.opacity = "0";
+                    setTimeout(() => loadingText.style.display = "none", 800);
+                }, 1200);
+            };
         }
-    </script>
 
+        window.onload = loadApp;
+    </script>
 </body>
 </html>
